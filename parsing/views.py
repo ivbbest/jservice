@@ -40,7 +40,6 @@ def parser_questions(count):
 
 class QuestionsView(APIView):
     def post(self, request):
-        i = 0
         count = request.data['questions_num']
         assert str(count).isnumeric(), "Don't correct questions_num. Repeat please!"
         # try:
@@ -59,13 +58,18 @@ class QuestionsView(APIView):
         # except Exception as e:
         #     print('Other Exception', e)
 
-        data, id_question = parser_questions(count)
-        for id in id_question:
-            if Question.objects.filter(id_question=id).exist():
-                i += 1
+        # data, id_question = parser_questions(count)
+        breakpoint()
+        data = [{'id_question': 22955, 'question': 'This sitcom was well into its first season when Jaleel White joined it as Steve Urkel', 'answer': '<i>Family Matters</i>', 'created_at': '2014-02-11T22:59:31.086Z'}, {'id_question': 22956, 'question': 'This Teflon Don & Gambino Family boss spilled the beans on tape at the Ravenite Social Club in Manhattan', 'answer': 'John Gotti', 'created_at': '2014-02-11T22:59:31.108Z'}]
 
-        if i > 0:
-            data, id_question = parser_questions(i)
+        id_question = [22955, 22956]
+
+        same_questions = Question.objects.filter(id_question__in=id_question).count()
+
+        while same_questions > 0:
+            data_new, id_question_new = parser_questions(same_questions)
+            data += data_new
+            same_questions = Question.objects.filter(id_question__in=id_question_new).count()
 
         serializer = QuestionSerializer(data=data, many=True)
 
