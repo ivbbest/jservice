@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.urls import path
-
-from parsing.views import *
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/questionlist/', QuestionAPIView.as_view()),
+    path('', include('parsing.urls')),
 ]
