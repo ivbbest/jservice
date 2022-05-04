@@ -1,15 +1,11 @@
 import json
 
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics
 from .models import Question
 from .serializers import QuestionSerializer
 from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.forms.models import model_to_dict
-
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -60,6 +56,14 @@ class QuestionsView(APIView):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            previous_item_id = Question.objects.last().id-1
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if not Question.objects.filter(id=previous_item_id).exists():
+                response = {'question_text': None}
+                return Response(response, status=status.HTTP_200_OK)
+
+            last_obj = Question.objects.filter(id=previous_item_id).values('question')
+            response = {'question_text': last_obj}
+
+            return Response(response, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
