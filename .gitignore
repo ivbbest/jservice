@@ -7,6 +7,7 @@ __pycache__/
 config.py
 tz.txt
 .*tz.*
+whole.json
 
 # C extensions
 *.so
