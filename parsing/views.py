@@ -43,17 +43,12 @@ def parser_questions(count):
 
 class QuestionsView(APIView):
     def post(self, request):
-        count = 1
+        count = request.data['questions_num']
 
         if not isinstance(count, int):
             raise ValueError("Don't correct questions_num. Repeat please!")
 
         data, id_question = parser_questions(count)
-
-        # data = [{'id_question': 22955, 'question': 'This sitcom was well into its first season when Jaleel White joined it as Steve Urkel', 'answer': '<i>Family Matters</i>', 'created_at': '2014-02-11T22:59:31.086Z'}, {'id_question': 22956, 'question': 'This Teflon Don & Gambino Family boss spilled the beans on tape at the Ravenite Social Club in Manhattan', 'answer': 'John Gotti', 'created_at': '2014-02-11T22:59:31.108Z'}]
-        #
-        # id_question = [22955, 22956]
-
         same_questions = Question.objects.filter(id_question__in=id_question).count()
 
         while same_questions > 0:
