@@ -33,36 +33,26 @@ def parser_questions(count):
         for res in response_data
     ]
 
-    id_question = map(lambda d: d['id_question'], data)
+    id_question = list()
+
+    for d in data:
+        id_question.append(d['id_question'])
 
     return data, id_question
 
 
 class QuestionsView(APIView):
     def post(self, request):
-        count = request.data['questions_num']
-        assert str(count).isnumeric(), "Don't correct questions_num. Repeat please!"
-        # try:
-        #
-        #     count = request.data['questions_num']
-        #     assert str(count).isnumeric(), "Don't correct Value"
-        #
-        #     print(type(count))
-        #     print(str(count).isnumeric())
-        # except json.decoder.JSONDecodeError as e:
-        #     print("There was a problem accessing the equipment data.", e)
-        # except ValueError as e:
-        #     print('Dont correct parameter questions_num', e)
-        # except TypeError as e:
-        #     print('TypeError', e)
-        # except Exception as e:
-        #     print('Other Exception', e)
+        count = 1
 
-        # data, id_question = parser_questions(count)
-        breakpoint()
-        data = [{'id_question': 22955, 'question': 'This sitcom was well into its first season when Jaleel White joined it as Steve Urkel', 'answer': '<i>Family Matters</i>', 'created_at': '2014-02-11T22:59:31.086Z'}, {'id_question': 22956, 'question': 'This Teflon Don & Gambino Family boss spilled the beans on tape at the Ravenite Social Club in Manhattan', 'answer': 'John Gotti', 'created_at': '2014-02-11T22:59:31.108Z'}]
+        if not isinstance(count, int):
+            raise ValueError("Don't correct questions_num. Repeat please!")
 
-        id_question = [22955, 22956]
+        data, id_question = parser_questions(count)
+
+        # data = [{'id_question': 22955, 'question': 'This sitcom was well into its first season when Jaleel White joined it as Steve Urkel', 'answer': '<i>Family Matters</i>', 'created_at': '2014-02-11T22:59:31.086Z'}, {'id_question': 22956, 'question': 'This Teflon Don & Gambino Family boss spilled the beans on tape at the Ravenite Social Club in Manhattan', 'answer': 'John Gotti', 'created_at': '2014-02-11T22:59:31.108Z'}]
+        #
+        # id_question = [22955, 22956]
 
         same_questions = Question.objects.filter(id_question__in=id_question).count()
 
