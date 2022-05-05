@@ -44,7 +44,7 @@ class QuestionView(APIView):
         count = request.data['questions_num']
 
         # проверка, что задано целое число count, иначе вывод ошибки
-        if not isinstance(count, int):
+        if not isinstance(count, int) and count <= 100:
             raise ValueError("Don't correct questions_num. Repeat please!")
 
         # вызов функции парсинга
